@@ -25,7 +25,9 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_POST(self):
         content_length = int(self.headers['Content-Length'])
-        body = json.loads(self.rfile.read(content_length).decode('utf-8'))
+        body =  json.loads(json.loads(self.rfile.read(content_length).decode('utf-8')))
+        print(body)
+        print(type(body))
 
         if self.path == '/api/v1/generate':
             self.send_response(200)
@@ -105,11 +107,11 @@ def run_server():
         try:
             from flask_cloudflared import _run_cloudflared
             public_url = _run_cloudflared(params['port'], params['port'] + 1)
-            print(f'Starting KoboldAI compatible api at {public_url}/api')
+            print("Starting KoboldAI compatible api at " + public_url + "/api")
         except ImportError:
             print('You should install flask_cloudflared manually')
     else:
-        print(f'Starting KoboldAI compatible api at http://{server_addr[0]}:{server_addr[1]}/api')
+        print("Starting KoboldAI compatible api at http://" + server_addr[0]+":"+server_addr[1]+"/api")
     server.serve_forever()
 
 
